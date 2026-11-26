@@ -1,12 +1,15 @@
 """
 LAYA OS - Text-to-Speech (TTS) Engine
 Generates expressive Indian female neural speech in Tamil, English, and Tanglish.
-Supports Sarvam bulbul:v4-flash, Edge-TTS (PallaviNeural), and local Piper/eSpeak TTS.
+Supports Sarvam bulbul:v4-flash, Edge-TTS (PallaviNeural / NeerjaNeural), and local eSpeak-NG/Piper.
+Plays audio through PipeWire (pw-play), PulseAudio (paplay), ffplay, or pygame.
 """
 
 import os
-import sys
+import asyncio
 import hashlib
+import shutil
+import subprocess
 import logging
 from pathlib import Path
 from typing import Optional, Dict, Any
@@ -17,9 +20,8 @@ logger = logging.getLogger("laya.tts")
 
 
 class TextToSpeechEngine:
-    """Multilingual Neural TTS Engine with cache and multi-provider fallback."""
+    """Multilingual Neural TTS Engine with cache, multi-provider fallback, and PipeWire playback."""
 
-    # Romanized Tanglish to natural Tamil script dictionary for fluid pronunciation
     TANGLISH_TO_TAMIL = [
         ("Ippo mani", "இப்போ மணி"),
         ("open pannitten", "ஓபன் பண்ணிட்டேன்"),
@@ -52,6 +54,7 @@ class TextToSpeechEngine:
         self.cache_dir = Path(cache_dir or os.path.expanduser("~/.cache/laya/audio"))
         self.cache_dir.mkdir(parents=True, exist_ok=True)
         self.http_session = requests.Session()
+        self.is_speaking = False
 
     def transliterate_tanglish(self, text: str) -> str:
         """Converts common Tanglish phrases to Tamil for more authentic phonetics."""
@@ -60,11 +63,12 @@ class TextToSpeechEngine:
             processed = processed.replace(roman, tamil)
         return processed
 
+    @staticmethod
+    def _has_tamil_script(text: str) -> bool:
+        return any("\u0B80" <= ch <= "\u0BFF" for ch in text)
+
     def synthesize(self, text: str, target_lang: str = "ta-IN") -> Dict[str, Any]:
-        """
-        Synthesizes text into audio data.
-        Returns audio metadata and file path.
-        """
+        """Synthesizes text into an audio file and returns metadata."""
         if not text or not text.strip():
             return {"status": "empty", "audio_path": None}
 
@@ -72,20 +76,20 @@ class TextToSpeechEngine:
         cache_hash = hashlib.sha256(f"{spoken_text}_{self.sarvam_speaker}_{target_lang}".encode("utf-8")).hexdigest()
         cached_file = self.cache_dir / f"{cache_hash}.mp3"
 
-        if cached_file.exists():
+        if cached_file.exists() and cached_file.stat().st_size > 0:
             return {
                 "status": "cached",
                 "audio_path": str(cached_file),
                 "text": spoken_text,
-                "provider": "cache"
+                "provider": "cache",
             }
 
-        # Try Sarvam AI API
+        # 1. Try Sarvam AI API if configured
         if self.api_key and self.api_key != "your_sarvam_api_key_here":
             try:
                 headers = {
                     "api-subscription-key": self.api_key,
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
                 }
                 payload = {
                     "inputs": [spoken_text],
@@ -96,27 +100,80 @@ class TextToSpeechEngine:
                     "loudness": 1.5,
                     "speech_sample_rate": 22050,
                     "enable_preprocessing": True,
-                    "model": self.sarvam_model
+                    "model": self.sarvam_model,
                 }
                 resp = self.http_session.post(self.sarvam_url, headers=headers, json=payload, timeout=8)
-                if resp.status_code == 200:
-                    with open(cached_file, "wb") as f:
-                        f.write(resp.content)
+                if resp.status_code == 200 and resp.content:
+                    cached_file.write_bytes(resp.content)
                     return {
                         "status": "synthesized",
                         "audio_path": str(cached_file),
                         "text": spoken_text,
-                        "provider": "sarvam-bulbul"
+                        "provider": "sarvam-bulbul",
                     }
-                else:
-                    logger.warning(f"[TTS] Sarvam returned {resp.status_code}: {resp.text}")
+                logger.warning(f"[TTS] Sarvam returned {resp.status_code}")
             except Exception as e:
                 logger.error(f"[TTS] Sarvam synthesis error: {e}")
 
-        # Fallback offline indicator
+        # 2. Try Edge-TTS (Indian female neural voice: Pallavi / Neerja)
+        try:
+            import edge_tts
+            voice = self.voice_tamil_edge if self._has_tamil_script(spoken_text) else self.voice_english_edge
+
+            async def _save_edge():
+                communicate = edge_tts.Communicate(spoken_text, voice)
+                await communicate.save(str(cached_file))
+
+            asyncio.run(_save_edge())
+            if cached_file.exists() and cached_file.stat().st_size > 0:
+                return {
+                    "status": "synthesized",
+                    "audio_path": str(cached_file),
+                    "text": spoken_text,
+                    "provider": "edge-tts",
+                }
+        except Exception as e:
+            logger.debug(f"[TTS] Edge-TTS unavailable: {e}")
+
+        # 3. Local Offline Fallback (espeak-ng)
         return {
             "status": "offline_fallback",
             "audio_path": None,
             "text": spoken_text,
-            "provider": "edge-or-espeak"
+            "provider": "espeak-ng",
         }
+
+    def speak(self, text: str, target_lang: str = "ta-IN") -> Dict[str, Any]:
+        """Synthesizes and plays speech through PipeWire / PulseAudio / local TTS."""
+        res = self.synthesize(text, target_lang=target_lang)
+        audio_path = res.get("audio_path")
+
+        self.is_speaking = True
+        try:
+            if audio_path and os.path.exists(audio_path):
+                self._play_audio_file(audio_path)
+            elif res.get("status") == "offline_fallback":
+                espeak_bin = shutil.which("espeak-ng") or shutil.which("espeak")
+                if espeak_bin:
+                    lang_flag = "ta" if self._has_tamil_script(res["text"]) else "en-in"
+                    subprocess.run([espeak_bin, "-v", lang_flag, res["text"]], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        finally:
+            self.is_speaking = False
+
+        return res
+
+    @staticmethod
+    def _play_audio_file(filepath: str):
+        """Plays an MP3/WAV file using available Linux audio players."""
+        for player_cmd in (
+            ["pw-play", filepath],
+            ["ffplay", "-nodisp", "-autoexit", "-loglevel", "quiet", filepath],
+            ["mpg123", "-q", filepath],
+            ["paplay", filepath],
+        ):
+            if shutil.which(player_cmd[0]):
+                try:
+                    subprocess.run(player_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=30)
+                    return
+                except Exception:
+                    continue

@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=LAYA OS
+Comment=LAYA OS — Intelligence Within (AI-Native Wayland Session)
+Exec=/usr/local/bin/laya-session-start
+Type=Application
+DesktopNames=LAYA;GNOME
+Keywords=laya;ai;desktop;wayland;

@@ -42,3 +42,21 @@ def test_agent_volume_intent(tmp_path):
 
     res_mute = agent.process_input("mute pannu")
     assert "மியூட்" in res_mute["reply"]
+
+    res_num = agent.process_input("volume 75 set pannu")
+    assert res_num["action"] == "set_audio_volume"
+    assert res_num["volume"] == 75
+
+
+def test_agent_brightness_and_lock(tmp_path):
+    db_file = str(tmp_path / "test_memory2.db")
+    memory = PersistentMemoryStore(db_path=db_file)
+    agent = LayaAgent(memory_store=memory)
+
+    res_bright = agent.process_input("brightness 60")
+    assert res_bright["action"] == "set_brightness"
+    assert res_bright["brightness"] == 60
+
+    res_lock = agent.process_input("lock screen")
+    assert res_lock["action"] == "system_lock"
+    assert res_lock["requires_confirmation"] is True
