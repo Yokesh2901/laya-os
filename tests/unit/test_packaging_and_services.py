@@ -63,10 +63,20 @@ def test_required_assets_exist_in_repo():
 
 def test_build_iso_ubuntu_2604_compatibility():
     build_sh = (REPO_ROOT / "os/image-build/build-iso.sh").read_text(encoding="utf-8")
+    grub_theme = (REPO_ROOT / "os/branding/grub/theme.txt").read_text(encoding="utf-8")
 
     assert "lupin-casper" not in build_sh
+    assert "laya-os-alpha-0.1-fixed-amd64.iso" in build_sh
+    assert "--repack-only" in build_sh
     assert "ubuntu.sources" in build_sh
     assert "main restricted universe multiverse" in build_sh
     assert "filesystem.manifest" in build_sh
     assert ".disk/info" in build_sh
+    assert "update-initramfs -u -k all" in build_sh
+    assert "grub-file --is-x86-linux" in build_sh
+    assert "grub-script-check" in build_sh
+    assert "-sort" in build_sh
+    assert "insmod iso9660" in build_sh
+    assert "insmod linux" in build_sh
     assert "search --no-floppy --set=root --file /casper/vmlinuz" in build_sh
+    assert "background.png" not in grub_theme

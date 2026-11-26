@@ -7,7 +7,6 @@ title-color: "#F8FAFC"
 message-font: "Ubuntu Regular 14"
 message-color: "#94A3B8"
 
-desktop-image: "background.png"
 desktop-color: "#090B18"
 
 + boot_menu {

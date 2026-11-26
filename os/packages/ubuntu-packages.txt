@@ -69,6 +69,7 @@ squashfs-tools
 xorriso
 isolinux
 syslinux-efi
+grub-common
 grub-pc-bin
 grub-efi-amd64-bin
 mtools
