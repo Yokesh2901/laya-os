@@ -36,12 +36,16 @@ class ApplicationManager:
         "கேமரா": "camera",
     }
 
-    def __init__(self):
-        self.app_dirs = [
-            "/usr/share/applications",
-            "/usr/local/share/applications",
-            os.path.expanduser("~/.local/share/applications")
-        ]
+    def __init__(self, app_dirs: Optional[List[str]] = None):
+        self.app_dirs = (
+            app_dirs
+            if app_dirs is not None
+            else [
+                "/usr/share/applications",
+                "/usr/local/share/applications",
+                os.path.expanduser("~/.local/share/applications"),
+            ]
+        )
         self._cached_apps: List[Dict[str, Any]] = []
 
     def scan_applications(self, force_refresh: bool = False) -> List[Dict[str, Any]]:
