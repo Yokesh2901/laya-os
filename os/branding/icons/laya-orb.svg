@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <radialGradient id="orbGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#22D3EE" stop-opacity="0.9" />
+      <stop offset="45%" stop-color="#8B5CF6" stop-opacity="0.75" />
+      <stop offset="85%" stop-color="#6D28D9" stop-opacity="0.4" />
+      <stop offset="100%" stop-color="#090B18" stop-opacity="0" />
+    </radialGradient>
+    <filter id="softGlow">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+  <circle cx="128" cy="128" r="110" fill="url(#orbGlow)" filter="url(#softGlow)" />
+  <circle cx="128" cy="128" r="82" fill="none" stroke="#22D3EE" stroke-width="2.5" stroke-dasharray="6 4" stroke-opacity="0.8" />
+  <circle cx="128" cy="128" r="54" fill="none" stroke="#F8FAFC" stroke-width="3" stroke-opacity="0.9" />
+  <circle cx="128" cy="128" r="18" fill="#FFFFFF" filter="url(#softGlow)" />
+</svg>

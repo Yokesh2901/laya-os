@@ -1,0 +1,17 @@
+[Unit]
+Description=LAYA AI Core Background Service (STT, TTS, Conversational Agent)
+Documentation=https://github.com/laya-os/laya-os
+After=laya-system.service pipewire.service
+Wants=laya-system.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 -m laya.main
+Restart=on-failure
+RestartSec=5
+Environment=PYTHONUNBUFFERED=1
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=default.target

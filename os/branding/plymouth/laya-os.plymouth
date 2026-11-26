@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=LAYA OS Plymouth Theme
+Description=Futuristic boot splash featuring the glowing Laya AI core
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/laya-os
+ScriptFile=/usr/share/plymouth/themes/laya-os/laya-os.script

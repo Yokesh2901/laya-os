@@ -1,0 +1,14 @@
+[Unit]
+Description=LAYA OS System Core & D-Bus Service
+Documentation=https://github.com/laya-os/laya-os
+After=default.target sound.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 -m system.dbus.service
+Restart=on-failure
+RestartSec=3
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=default.target

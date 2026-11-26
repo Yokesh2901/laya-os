@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="layaGradPrimary" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22D3EE" />
+      <stop offset="50%" stop-color="#8B5CF6" />
+      <stop offset="100%" stop-color="#6D28D9" />
+    </linearGradient>
+    <radialGradient id="layaCoreGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#22D3EE" stop-opacity="0.8" />
+      <stop offset="60%" stop-color="#8B5CF6" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#090B18" stop-opacity="0" />
+    </radialGradient>
+    <filter id="neonGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="12" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Background Base Canvas -->
+  <rect width="512" height="512" rx="112" fill="#090B18" />
+  <rect width="508" height="508" x="2" y="2" rx="110" fill="none" stroke="url(#layaGradPrimary)" stroke-width="3" stroke-opacity="0.4" />
+
+  <!-- Ambient Core Glow -->
+  <circle cx="256" cy="256" r="180" fill="url(#layaCoreGlow)" />
+
+  <!-- Outer Quantum Orbital Ring -->
+  <circle cx="256" cy="256" r="160" fill="none" stroke="#8B5CF6" stroke-width="4" stroke-opacity="0.3" stroke-dasharray="16 8" />
+  
+  <!-- Mid Resonant Wave Arc (Voice / Neural Frequency) -->
+  <path d="M 140 256 A 116 116 0 1 1 372 256" fill="none" stroke="url(#layaGradPrimary)" stroke-width="12" stroke-linecap="round" filter="url(#neonGlow)" />
+  <path d="M 372 256 A 116 116 0 0 1 140 256" fill="none" stroke="#22D3EE" stroke-width="6" stroke-linecap="round" stroke-dasharray="8 12" />
+
+  <!-- Inner Geometric "L" Monogram & AI Waveform -->
+  <path d="M 216 168 L 216 332 L 316 332" fill="none" stroke="#F8FAFC" stroke-width="26" stroke-linecap="round" stroke-linejoin="round" />
+  
+  <!-- Synaptic Node Spark (Cyan Spark Point) -->
+  <circle cx="316" cy="332" r="14" fill="#22D3EE" filter="url(#neonGlow)" />
+  <circle cx="316" cy="332" r="7" fill="#FFFFFF" />
+
+  <!-- Voice Activity Particle Nodes -->
+  <circle cx="216" cy="168" r="8" fill="#8B5CF6" />
+  <circle cx="256" cy="190" r="6" fill="#22D3EE" />
+  <circle cx="280" cy="220" r="5" fill="#8B5CF6" />
+</svg>

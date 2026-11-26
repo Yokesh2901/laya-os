@@ -1,0 +1,171 @@
+/* ==========================================================================
+   LAYA OS - Design System & Desktop Theme
+   Colors:
+     Midnight Navy:   #090B18 (Base Background)
+     Surface:         #111429 (Cards, Panels, Surfaces)
+     Electric Violet: #8B5CF6 (Primary Accent)
+     Deep Purple:     #6D28D9 (Secondary Accent / Gradients)
+     Cyan:            #22D3EE (Highlight / Status / Voice Active)
+     Soft White:      #F8FAFC (Typography Primary)
+     Muted Gray:      #94A3B8 (Typography Secondary)
+     Glass Border:    rgba(139, 92, 246, 0.25)
+   ========================================================================== */
+
+@define-color laya_midnight_navy #090B18;
+@define-color laya_surface #111429;
+@define-color laya_surface_glass rgba(17, 20, 41, 0.75);
+@define-color laya_electric_violet #8B5CF6;
+@define-color laya_deep_purple #6D28D9;
+@define-color laya_cyan #22D3EE;
+@define-color laya_soft_white #F8FAFC;
+@define-color laya_muted #94A3B8;
+@define-color laya_glass_border rgba(139, 92, 246, 0.28);
+@define-color laya_glass_glow rgba(34, 211, 238, 0.15);
+
+/* Base Window Styling */
+window, .laya-window {
+    background-color: @laya_midnight_navy;
+    color: @laya_soft_white;
+    font-family: "Inter", "Ubuntu", "Noto Sans Tamil", sans-serif;
+    font-size: 14px;
+}
+
+/* Glassmorphism Containers */
+.laya-glass-card {
+    background-color: @laya_surface_glass;
+    border: 1px solid @laya_glass_border;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45), inset 0 1px 1px 0 rgba(255, 255, 255, 0.12);
+    padding: 16px;
+    backdrop-filter: blur(24px);
+}
+
+/* Laya Top Panel */
+.laya-top-panel {
+    background-color: rgba(9, 11, 24, 0.82);
+    border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+    color: @laya_soft_white;
+    font-weight: 500;
+    min-height: 38px;
+    padding: 0 12px;
+}
+
+.laya-panel-pill {
+    background-color: rgba(17, 20, 41, 0.6);
+    border: 1px solid rgba(139, 92, 246, 0.18);
+    border-radius: 20px;
+    padding: 4px 12px;
+    margin: 3px 4px;
+    transition: all 200ms ease;
+}
+
+.laya-panel-pill:hover {
+    background-color: rgba(139, 92, 246, 0.25);
+    border-color: @laya_electric_violet;
+}
+
+/* Laya Dock */
+.laya-dock-container {
+    background-color: rgba(17, 20, 41, 0.85);
+    border: 1px solid rgba(139, 92, 246, 0.35);
+    border-radius: 24px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 20px @laya_glass_glow;
+    padding: 8px 14px;
+    margin-bottom: 12px;
+    backdrop-filter: blur(30px);
+}
+
+.laya-dock-item {
+    border-radius: 14px;
+    padding: 8px;
+    margin: 0 4px;
+    transition: transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1), background-color 150ms ease;
+}
+
+.laya-dock-item:hover {
+    background-color: rgba(139, 92, 246, 0.3);
+    transform: translateY(-4px) scale(1.08);
+}
+
+.laya-dock-item.active {
+    border-bottom: 3px solid @laya_cyan;
+}
+
+/* Application Launcher */
+.laya-launcher-window {
+    background-color: rgba(9, 11, 24, 0.92);
+    backdrop-filter: blur(40px);
+}
+
+.laya-search-bar {
+    background-color: rgba(17, 20, 41, 0.95);
+    border: 1.5px solid @laya_electric_violet;
+    border-radius: 14px;
+    color: @laya_soft_white;
+    font-size: 16px;
+    padding: 12px 18px;
+    box-shadow: 0 0 16px rgba(139, 92, 246, 0.25);
+}
+
+.laya-search-bar:focus {
+    border-color: @laya_cyan;
+    box-shadow: 0 0 24px rgba(34, 211, 238, 0.4);
+}
+
+.laya-app-card {
+    background-color: rgba(17, 20, 41, 0.6);
+    border: 1px solid rgba(139, 92, 246, 0.15);
+    border-radius: 14px;
+    padding: 14px;
+    transition: all 180ms ease;
+}
+
+.laya-app-card:hover {
+    background-color: rgba(139, 92, 246, 0.25);
+    border-color: @laya_cyan;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+/* Laya AI Orb & Visualizer */
+.laya-ai-orb-idle {
+    border-radius: 50%;
+    background: radial-gradient(circle, #8B5CF6 0%, #6D28D9 65%, #090B18 100%);
+    box-shadow: 0 0 18px rgba(139, 92, 246, 0.5);
+}
+
+.laya-ai-orb-active {
+    border-radius: 50%;
+    background: radial-gradient(circle, #22D3EE 0%, #8B5CF6 60%, #111429 100%);
+    box-shadow: 0 0 28px rgba(34, 211, 238, 0.75);
+    animation: pulse-glow 1.5s infinite alternate;
+}
+
+/* Buttons and Controls */
+button.laya-btn-primary {
+    background: linear-gradient(135deg, @laya_electric_violet 0%, @laya_deep_purple 100%);
+    color: @laya_soft_white;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    transition: all 150ms ease;
+}
+
+button.laya-btn-primary:hover {
+    box-shadow: 0 0 16px rgba(139, 92, 246, 0.6);
+    transform: translateY(-1px);
+}
+
+button.laya-btn-secondary {
+    background-color: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    color: @laya_soft_white;
+    border-radius: 10px;
+    padding: 10px 20px;
+}
+
+button.laya-btn-secondary:hover {
+    background-color: rgba(139, 92, 246, 0.2);
+    border-color: @laya_cyan;
+}

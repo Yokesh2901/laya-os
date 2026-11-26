@@ -1,0 +1,38 @@
+# LAYA OS - GRUB Bootloader Theme
+# Dark Midnight Navy with Electric Violet highlights
+
+title-text: "LAYA OS — Intelligence Within"
+title-font: "Ubuntu Regular 24"
+title-color: "#F8FAFC"
+message-font: "Ubuntu Regular 14"
+message-color: "#94A3B8"
+
+desktop-image: "background.png"
+desktop-color: "#090B18"
+
++ boot_menu {
+  left = 25%
+  width = 50%
+  top = 35%
+  height = 40%
+  item_font = "Ubuntu Regular 16"
+  item_color = "#94A3B8"
+  selected_item_font = "Ubuntu Bold 16"
+  selected_item_color = "#22D3EE"
+  item_height = 36
+  item_padding = 8
+  item_spacing = 6
+}
+
++ progress_bar {
+  id = "__timeout__"
+  left = 35%
+  width = 30%
+  top = 80%
+  height = 14
+  font = "Ubuntu Regular 12"
+  text_color = "#F8FAFC"
+  fg_color = "#8B5CF6"
+  bg_color = "#111429"
+  border_color = "#6D28D9"
+}
