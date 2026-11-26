@@ -54,9 +54,10 @@
 ---
 
 ## 5. Test Results
-- Automated Unit & Integration Tests: **20 PASSED / 0 FAILED** (100% pass rate in 0.78s)
+- Automated Unit & Integration Tests: **24 PASSED / 0 FAILED** (100% pass rate in 0.92s)
   - `tests/unit/test_agent.py`: 4 passed
   - `tests/unit/test_dbus_client.py`: 3 passed
+  - `tests/unit/test_packaging_and_services.py`: 4 passed
   - `tests/unit/test_security_policy.py`: 4 passed
   - `tests/unit/test_launcher.py`: 2 passed
   - `tests/unit/test_particle_orb.py`: 2 passed

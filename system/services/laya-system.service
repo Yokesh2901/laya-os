@@ -1,14 +1,19 @@
 [Unit]
 Description=LAYA OS System Core & D-Bus Service
-Documentation=https://github.com/laya-os/laya-os
-After=default.target sound.target
+Documentation=https://github.com/Yokesh2901/laya-os
+After=dbus.service default.target sound.target
+PartOf=graphical-session.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/python3 -m system.dbus.service
+WorkingDirectory=/opt/laya-os
+Environment=PYTHONPATH=/opt/laya-os
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/opt/laya-os/.venv/bin/python3 -m system.dbus.service
 Restart=on-failure
 RestartSec=3
-Environment=PYTHONUNBUFFERED=1
+StandardOutput=journal
+StandardError=journal
 
 [Install]
-WantedBy=default.target
+WantedBy=graphical-session.target
